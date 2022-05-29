@@ -1,35 +1,62 @@
 import React from 'react';
 import NewTicketForm from './NewTicketForm';
 import TicketList from './TicketList';
+import TicketDetail from './TicketDetail';
+
 
 class TicketControl extends React.Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      formVisibleOnPage: false
+      formVisibleOnPage: false,
+      mainTicketList: [], 
+      selectedTicket: null
     };
   }
+  handleAddingNewTicketToList = (newTicket) => {
+    const newMainTicketList = this.state.mainTicketList.concat(newTicket);
+    this.setState({
+      mainTicketList: newMainTicketList,
+      formVisibleOnPage: false 
+    });
+  }
   handleClick = () => {
-    this.setState({formVisibleOnPage: true});
+    if (this.state.selectedTicket != null) {
+      this.setState({
+        formVisibleOnPage: false,
+        selectedTicket: null
+      });
+    } else {
+      this.setState(prevState => ({
+        formVisibleOnPage: !prevState.formVisibleOnPage,
+      }));
+    }
+  }
+  handleChangingSelectedTicket = (id) => {
+    const selectedTicket = this.state.mainTicketList.filter(ticket => ticket.id === id) [0];
+    this.setState({selectedTicket: selectedTicket});
   }
 
   render(){
     let currentlyVisibleState = null;
-    let addTicketButton = null;
-    if (this.state.formVisibleOnPage) {
-      currentlyVisibleState = <NewTicketForm />
+    let buttonText = null; 
+    if (this.state.selectedTicket != null) {
+      currentlyVisibleState = <TicketDetail ticket = {this.state.selectedTicket} />
+      buttonText = "Return to Ticket List";
+    } else if (this.state.formVisibleOnPage) {
+      currentlyVisibleState = <NewTicketForm onNewTicketCreation={this.handleAddingNewTicketToList} />;
+      buttonText = "Return to Ticket List"; 
     } else {
-      currentlyVisibleState = <TicketList />
-      addTicketButton = <button onClick={this.handleClick}>Add ticket</button> 
+      currentlyVisibleState = <TicketList ticketList={this.state.mainTicketList} onTicketSelection={this.handleChangingSelectedTicket} />;
+      buttonText = "Add Ticket";
     }
     return (
       <React.Fragment>
         {currentlyVisibleState}
-        {addTicketButton}
+        <button onClick={this.handleClick}>{buttonText}</button> { /* new code */ }
       </React.Fragment>
     );
   }
 }
-
 export default TicketControl;
