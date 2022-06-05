@@ -7,12 +7,12 @@ function NewTicketForm(props){
 
   function handleNewTicketFormSubmission(event) {
     event.preventDefault();
-    props.onNewTicketCreation({names: event.target.names.value, location: event.target.location.value, issue: event.target.issue.value, id: v4()});
+    props.onNewTicketCreation({names: event.target.names.value, locations: event.target.location.value, issue: event.target.issue.value, id: v4()});
   }
 
   return (
     <React.Fragment>
-      <ReusableForm 
+      <ReusableForm
         formSubmissionHandler={handleNewTicketFormSubmission}
         buttonText="Help!" />
     </React.Fragment>

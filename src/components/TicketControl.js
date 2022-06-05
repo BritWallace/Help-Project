@@ -16,6 +16,41 @@ class TicketControl extends React.Component {
     };
   }
 
+  handleDeletingTicket = (id) => {
+    const newMainTicketList = this.state.mainTicketList.filter(ticket => ticket.id !== id);
+    this.setState({
+      mainTicketList: newMainTicketList,
+      selectedTicket: null
+    });
+  }
+
+  handleEditClick = () => {
+    console.log("handleEditClick reached!");
+    this.setState({editing: true});
+  }
+
+  handleEditingTicketInList = (ticketToEdit) => {
+    const editedMainTicketList = this.state.mainTicketList
+      .filter(ticket => ticket.id !== this.state.selectedTicket.id)
+      .concat(ticketToEdit);
+    this.setState({
+        mainTicketList: editedMainTicketList,
+        editing: false,
+        selectedTicket: null
+      });
+  }
+
+  handleChangingSelectedTicket = (id) => {
+    const selectedTicket = this.state.mainTicketList.filter(ticket => ticket.id === id)[0];
+    this.setState({selectedTicket: selectedTicket});
+  }
+
+  handleAddingNewTicketToList = (newTicket) => {
+    const newMainTicketList = this.state.mainTicketList.concat(newTicket);
+    this.setState({mainTicketList: newMainTicketList,
+                  formVisibleOnPage: false });
+  }
+
   handleClick = () => {
     if (this.state.selectedTicket != null) {
       this.setState({
@@ -30,62 +65,30 @@ class TicketControl extends React.Component {
     }
   }
 
-  handleAddingNewTicketToList = (newTicket) => {
-    const newMainTicketList = this.state.mainTicketList.concat(newTicket);
-    this.setState({
-      mainTicketList: newMainTicketList,
-      formVisibleOnPage: false
-    });
-  }
-
-  handleChangingSelectedTicket = (id) => {
-    const selectedTicket = this.state.mainTicketList.filter(ticket => ticket.id === id)[0];
-    this.setState({selectedTicket: selectedTicket});
-  }
-
-  handleDeletingTicket = (id) => {
-    const newMainTicketList = this.state.mainTicketList.filter(ticket => ticket.id !== id);
-    this.setState({
-      mainTicketList: newMainTicketList,
-      selectedTicket: null
-    });
-  }
-
-  handleEditClick = () => {
-    this.setState({editing: true});
-  }
-
-  handleEditingTicketInList = (ticketToEdit) => {
-    const editedMainTicketList = this.state.mainTicketList
-      .filter(ticket => ticket.id !== this.state.selectedTicket.id)
-      .concat(ticketToEdit);
-    this.setState({
-      mainTicketList: editedMainTicketList,
-      editing: false,
-      selectedTicket: null
-    });
-  }
-
   render(){
     let currentlyVisibleState = null;
     let buttonText = null;
-    if (this.state.editing ) {      
-      currentlyVisibleState = <EditTicketForm ticket = {this.state.selectedTicket} onEditTicket = {this.handleEditingTicketInList} />
-      buttonText = "Return to Ticket List";
-    } else if (this.state.selectedTicket != null) {
-      currentlyVisibleState = 
-      <TicketDetail 
+
+  if (this.state.editing) {
+    currentlyVisibleState = <EditTicketForm ticket = {this.state.selectedTicket} onEditTicket = {this.handleEditingTicketInList} />
+    buttonText = "Return to Ticket List";
+
+  } else if (this.state.selectedTicket != null){
+      currentlyVisibleState = <TicketDetail 
         ticket = {this.state.selectedTicket} 
-        onClickingDelete = {this.handleDeletingTicket} 
+        onClickingDelete = {this.handleDeletingTicket}
         onClickingEdit = {this.handleEditClick} />
-      buttonText = "Return to Ticket List";
+      buttonText= "Return to Ticket List";
+
     } else if (this.state.formVisibleOnPage) {
-      currentlyVisibleState = <NewTicketForm onNewTicketCreation={this.handleAddingNewTicketToList}  />;
+      currentlyVisibleState = <NewTicketForm onNewTicketCreation={this.handleAddingNewTicketToList}/>;
       buttonText = "Return to Ticket List";
+
     } else {
-      currentlyVisibleState = <TicketList ticketList={this.state.mainTicketList} onTicketSelection={this.handleChangingSelectedTicket} />;
+      currentlyVisibleState = <TicketList ticketList={this.state.mainTicketList} onTicketSelection={this.handleChangingSelectedTicket}/>;
       buttonText = "Add Ticket";
-    }
+    };
+
     return (
       <React.Fragment>
         {currentlyVisibleState}
@@ -93,7 +96,6 @@ class TicketControl extends React.Component {
       </React.Fragment>
     );
   }
-
 }
 
 export default TicketControl;
