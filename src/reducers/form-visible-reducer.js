@@ -1,4 +1,4 @@
-import * as c from '../_tests_/actions/ActionTypes';
+import * as c from '../actions/ActionTypes';
 
 
 export default (state = false, action) => {
