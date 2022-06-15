@@ -24,3 +24,16 @@ NewTicketForm.propTypes = {
 };
 
 export default NewTicketForm;
+
+
+
+
+// const NewPostForm = (props) => {
+//   const handleAddingNewPostToForum = (e) => {
+//     e.preventDefault();
+//     props.onNewPostCreation({
+//       subject: e.target.postTitle.value,
+//       message: e.target.postBody.value,
+//       id: v4(),
+//     });
+//   }
