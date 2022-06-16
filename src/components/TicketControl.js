@@ -5,7 +5,7 @@ import TicketDetail from './TicketDetail';
 import EditTicketForm from './EditTicketForm';
 import { connect } from 'react-redux';
 import PropTypes from "prop-types";
-import * as a from './../actions';
+import * as actions from './../actions';
 
 
 // It should be clear where we will need to dispatch Redux actions - the exact same place where we previously used setState() to change our form's visibility. When refactoring an application to use Redux instead of React for state, this can be a very helpful way to see where the refactor needs to happen. We don't necessarily need to create new methods in our components. We just need to rewire the relevant methods to use Redux instead of React for state.
@@ -42,9 +42,23 @@ class TicketControl extends React.Component {
     });
   }
 
+  handleClick = () => {
+    if (this.state.selectedTicket != null) {
+      this.setState({
+        // formVisibleOnPage: false,
+        selectedTicket: null,
+        editing: false
+      });
+    } else {
+      const { dispatch } = this.props;
+      const action = actions.toggleForm();
+      dispatch(action);
+    }
+  }
+
   handleDeletingTicket = (id) => {
     const { dispatch } = this.props;          
-    const action = a.deleteTicket(id);
+    const action = action.deleteTicket(id);
     dispatch(action);                          
     this.setState({ selectedTicket: null });
   }
@@ -57,7 +71,7 @@ class TicketControl extends React.Component {
   handleEditingTicketInList = (ticketToEdit) => {     
     
     const { dispatch } = this.props;
-    const action = a.addTicket(ticketToEdit);
+    const action = actions.addTicket(ticketToEdit);
     dispatch(action);
     this.setState({
         editing: false,
@@ -72,25 +86,12 @@ class TicketControl extends React.Component {
 
   handleAddingNewTicketToList = (newTicket) => {
     const { dispatch } = this.props;                       
-    const action = a.addTicket(newTicket);
+    const action = actions.addTicket(newTicket);
     dispatch(action);    
-    const action2 = a.toggleForm();            
+    const action2 = actions.toggleForm();            
     dispatch(action2);
   }
 
-  handleClick = () => {
-    if (this.state.selectedTicket != null) {
-      this.setState({
-        //formVisibleOnPage: false,
-        selectedTicket: null,
-        editing: false
-      });
-    } else {
-      const { dispatch } = this.props;
-      const action = a.toggleForm();
-      dispatch(action);
-    }
-  }
 
   render(){
     let currentlyVisibleState = null;
@@ -119,8 +120,8 @@ class TicketControl extends React.Component {
     return (
       <React.Fragment>
         {currentlyVisibleState}
-        <button className="btn btn-primary" onClick = {this.handleClick}>{buttonText}</button>
-
+        {/* <button className="btn btn-primary" onClick = {this.handleClick}>{buttonText}</button> */}
+        <button onClick={this.handleClick}>{buttonText}</button>
       </React.Fragment>
     );
   }
