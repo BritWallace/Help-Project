@@ -19,7 +19,7 @@
 
 ## Description
 
-_A React app that can keep track ticket issues._
+_A React app that can keep track of any ticket issues and it will display how long the issue had been posted ._
 
 ## Component Diagram
 
