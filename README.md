@@ -23,7 +23,7 @@ _A React app that can keep track ticket issues._
 
 ## Component Diagram
 
-![component diagram](./src/img/diagram.jpeg)
+![component diagram](./src/Img/diagram.jpeg)
 
 
 ## Setup/Installation Requirements
